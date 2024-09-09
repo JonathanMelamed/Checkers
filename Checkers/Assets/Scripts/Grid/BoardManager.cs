@@ -3,7 +3,7 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     public int boardSize = 8;
-    private PieceManager _pieceManager;
+    [SerializeField] private PieceManager _pieceManager;
     private (Cell cell, PieceType pieceType)[,] _board;
 
     void Start()
@@ -14,13 +14,14 @@ public class BoardManager : MonoBehaviour
 
     private void InitializeBoard()
     {
-        Cell[] cells = FindObjectsOfType<Cell>();
+        GameObject[] cellObjects = GameObject.FindGameObjectsWithTag("Cell");
 
-        foreach (Cell cell in cells)
+        foreach (GameObject cellObject in cellObjects)
         {
+            Cell cell = cellObject.GetComponent<Cell>();
             int row = cell.GetRow();
             int column = cell.GetColumn();
-            _board[row, column] = (cell, PieceType.Null); // Initialize each cell with no piece
+            _board[row, column] = (cell, PieceType.Null);
         }
 
         SetupPieces();
@@ -32,10 +33,9 @@ public class BoardManager : MonoBehaviour
         {
             for (int col = 0; col < boardSize; col++)
             {
-                // Check if the cell should have a piece based on the row and column
-                if ((row + col) % 2 == 1)
+                if ((row + col) % 2 == 0)
                 {
-                    if (row < 3)
+                    if (row < 3) 
                     {
                         _board[row, col] = (_board[row, col].cell, PieceType.White);
                     }
@@ -47,24 +47,25 @@ public class BoardManager : MonoBehaviour
             }
         }
     }
-
+    
     public PieceType GetPieceTypeInCell(int row, int column)
     {
         if (IsWithinBounds(row, column))
         {
             return _board[row, column].pieceType;
         }
+
         return PieceType.Null;
     }
 
-    public void MovePiece(Piece pieceToMove,Cell targetCell)
+    public void MovePiece(Piece pieceToMove, Cell targetCell)
     {
         Vector2Int? currentPosition = _pieceManager.FindPiecePosition(pieceToMove);
         int fromRow = currentPosition.Value.x;
         int fromColumn = currentPosition.Value.y;
         int toRow = targetCell.GetRow();
         int toColumn = targetCell.GetColumn();
-        
+
         if (IsWithinBounds(fromRow, fromColumn) && IsWithinBounds(toRow, toColumn))
         {
             PieceType pieceType = _board[fromRow, fromColumn].pieceType;
@@ -73,7 +74,15 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    private bool IsWithinBounds(int row, int column)
+    public Cell GetCell(int row, int column)
+    {
+        if (IsWithinBounds(row, column))
+        {
+            return _board[row, column].cell;
+        }
+        return null;
+    }
+    public bool IsWithinBounds(int row, int column)
     {
         return row >= 0 && column >= 0 && row < boardSize && column < boardSize;
     }

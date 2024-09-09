@@ -720,11 +720,14 @@
     <Reference Include="Unity.Timeline">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
-      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem.ForUI">
+      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
+      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
@@ -734,9 +737,6 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InputSystem.ForUI">
-      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>

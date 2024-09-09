@@ -32,7 +32,6 @@ public class CellSelector
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            // Ensure that the clicked object is a Cell
             Cell cell = hit.collider.GetComponent<Cell>();
             if (cell != null)
             {

@@ -50,11 +50,11 @@
     <Compile Include="Assets\Scripts\MoveValidator.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\Piece\Piece.cs" />
+    <Compile Include="Assets\Scripts\Grid\PieceMovementOptions.cs" />
     <Compile Include="Assets\Scripts\InputHandler\CellSelector.cs" />
+    <Compile Include="Assets\Scripts\Grid\Cell.cs" />
     <Compile Include="Assets\Scripts\InputHandler\PlayerInput.cs" />
-    <Compile Include="Assets\Scripts\Grid\CellManager.cs" />
     <Compile Include="Assets\Scripts\InputHandler\PieceSelector.cs" />
-    <Compile Include="Assets\Scripts\Grid\cell.cs" />
     <Compile Include="Assets\Scripts\Piece\PieceManager.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.20f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
@@ -680,11 +680,14 @@
     <Reference Include="Unity.Timeline">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
-      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem.ForUI">
+      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
+      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
@@ -694,9 +697,6 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InputSystem.ForUI">
-      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>

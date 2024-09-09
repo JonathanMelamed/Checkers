@@ -16,7 +16,6 @@ public class PlayerInput
     {
         var selectedPiece = await pieceSelector.SelectPiece(currentPlayerType);
         var targetPosition = await cellSelector.SelectCell();
-
         return (selectedPiece, targetPosition);
     }
 }

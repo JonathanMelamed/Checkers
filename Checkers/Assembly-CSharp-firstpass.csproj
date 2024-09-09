@@ -46,8 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\TakeLast.cs" />
-    <Compile Include="Assets\Plugins\UniTask\Runtime\Triggers\AsyncAwakeTrigger.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\UniTaskVoid.cs" />
+    <Compile Include="Assets\Plugins\UniTask\Runtime\Triggers\AsyncAwakeTrigger.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Internal\PlayerLoopRunner.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\UnityExtensions\EveryUpdate.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\UnityAsyncExtensions.MonoBehaviour.cs" />
@@ -142,8 +142,8 @@
     <Compile Include="Assets\Plugins\UniTask\Runtime\Linq\ToUniTaskAsyncEnumerable.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\External\DOTween\DOTweenAsyncExtensions.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\CompilerServices\AsyncUniTaskVoidMethodBuilder.cs" />
-    <Compile Include="Assets\Plugins\UniTask\Runtime\AsyncUnit.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\EnumerableAsyncExtensions.cs" />
+    <Compile Include="Assets\Plugins\UniTask\Runtime\AsyncUnit.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\IUniTaskAsyncEnumerable.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\Triggers\AsyncTriggerExtensions.cs" />
     <Compile Include="Assets\Plugins\UniTask\Runtime\TimeoutController.cs" />
@@ -820,11 +820,14 @@
     <Reference Include="Unity.Timeline">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
-      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.InputSystem">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem.ForUI">
+      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection">
+      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.TestTools.CodeCoverage.Editor.OpenCover.Mono.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
@@ -834,9 +837,6 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.InputSystem.ForUI">
-      <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.InputSystem.ForUI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
       <HintPath>C:\Users\Dekel\Documents\GitHub\Checkers\Checkers\Library\ScriptAssemblies\Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>

@@ -36,7 +36,6 @@ public class PieceSelector
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            // Ensure that the clicked object has a Piece component
             Piece piece = hit.collider.GetComponent<Piece>();
             return piece;
         }
