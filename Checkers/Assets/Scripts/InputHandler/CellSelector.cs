@@ -1,14 +1,26 @@
-﻿using UnityEngine;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CellSelector
 {
     private Camera mainCamera;
-    
-    public CellSelector()
+    private InputReader _inputReader;
+
+    public CellSelector(InputReader inputReader)
     {
         mainCamera = Camera.main;
+        _inputReader = inputReader;
+
+        if (_inputReader != null)
+        {
+            _inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
+            _inputReader.GameplayInput.Enable(); // Ensure the input actions are enabled
+        }
+        else
+        {
+            Debug.LogError("InputReader is not assigned.");
+        }
     }
 
     public async Task<Cell> SelectCell()
@@ -17,7 +29,7 @@ public class CellSelector
 
         while (selectedCell == null)
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            if (_inputReader.GameplayInput.GamePlay.Select.triggered)
             {
                 selectedCell = TryGetClickedCell();
             }
@@ -33,11 +45,21 @@ public class CellSelector
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Cell cell = hit.collider.GetComponent<Cell>();
-            if (cell != null)
-            {
-                return cell;
-            }
+            return cell;
         }
         return null;
+    }
+
+    private void OnSelectPerformed(InputAction.CallbackContext context)
+    {
+    }
+
+    public void Cleanup()
+    {
+        if (_inputReader != null)
+        {
+            _inputReader.GameplayInput.GamePlay.Select.performed -= OnSelectPerformed;
+            _inputReader.GameplayInput.Disable();
+        }
     }
 }

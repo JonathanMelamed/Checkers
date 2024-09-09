@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 public class PlayerInput
 {
     private PieceSelector pieceSelector;
     private CellSelector cellSelector;
 
-    public PlayerInput()
+    public PlayerInput(InputReader inputReader)
     {
-        pieceSelector = new PieceSelector();
-        cellSelector = new CellSelector();
+        pieceSelector = new PieceSelector(inputReader);
+        cellSelector = new CellSelector(inputReader);
     }
 
     public async Task<(Piece selectedPiece, Cell targetPosition)> GetPlayerMove(PieceType currentPlayerType)

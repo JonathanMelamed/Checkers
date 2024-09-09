@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System;
 
-public class Piece : MonoBehaviour
+public class Piece:MonoBehaviour
 {
     public bool IsQueen { get; private set; }
-    public PieceType PieceType { get; private set; }
+    public PieceType PieceType;
 }

@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PieceMovementOptions : MonoBehaviour
 {
     private MoveValidator _moveValidator;
-    private BoardManager _boardManager;
-
+    [SerializeField]private BoardManager _boardManager;
     public PieceMovementOptions(BoardManager boardManager, MoveValidator moveValidator)
     {
-        _boardManager = boardManager;
+         _boardManager = boardManager;
         _moveValidator = moveValidator;
     }
-
-    
     public List<Cell> GetValidMoves(Cell sourceCell, Piece piece)
     {
         List<Cell> validCells = new List<Cell>();
@@ -41,6 +39,33 @@ public class PieceMovementOptions : MonoBehaviour
                 }
             }
         }
+
         return validCells;
+    }
+
+    public void HighlightValidMoves(List<Cell> validCells, Color highlightColor)
+    {
+        foreach (Cell cell in validCells)
+        {
+            Renderer cellRenderer = cell.GetComponent<Renderer>();
+            if (cellRenderer != null)
+            {
+                // Set material rendering mode to transparent
+                Material cellMaterial = cellRenderer.material;
+                cellMaterial.SetFloat("_Mode", 3); // 3 is for transparent mode in Unity's Standard shader
+                cellMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                cellMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                cellMaterial.SetInt("_ZWrite", 0);
+                cellMaterial.DisableKeyword("_ALPHATEST_ON");
+                cellMaterial.EnableKeyword("_ALPHABLEND_ON");
+                cellMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+                cellMaterial.renderQueue = 3000;
+
+                // Set the color and transparency (alpha channel)
+                Color transparentColor = highlightColor;
+                transparentColor.a = 0.5f; // Set the transparency (0 is fully transparent, 1 is fully opaque)
+                cellMaterial.color = transparentColor;
+            }
+        }
     }
 }

@@ -1,14 +1,17 @@
-﻿using UnityEngine;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PieceSelector
 {
     private Camera mainCamera;
+    private InputReader inputReader;
 
-    public PieceSelector()
+    public PieceSelector(InputReader inputReader)
     {
         mainCamera = Camera.main;
+        this.inputReader = inputReader;
+        inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
     }
 
     public async Task<Piece> SelectPiece(PieceType currentPlayerType)
@@ -17,7 +20,7 @@ public class PieceSelector
 
         while (selectedPiece == null)
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            if (inputReader.GameplayInput.GamePlay.Select.triggered)
             {
                 var piece = TryGetClickedPiece();
                 if (IsValidPiece(piece, currentPlayerType))
@@ -45,5 +48,10 @@ public class PieceSelector
     private bool IsValidPiece(Piece piece, PieceType currentPlayerType)
     {
         return piece != null && piece.PieceType == currentPlayerType;
+    }
+
+    private void OnSelectPerformed(InputAction.CallbackContext context)
+    {
+        // Handle the select performed event
     }
 }

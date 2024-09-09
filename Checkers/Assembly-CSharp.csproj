@@ -47,8 +47,11 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\TurnHandler.cs" />
     <Compile Include="Assets\Scripts\Grid\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\InputHandler\InputSystem\InputReader.cs" />
+    <Compile Include="Assets\Scripts\InputHandler\InputSystem\GameplayInput.cs" />
     <Compile Include="Assets\Scripts\MoveValidator.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Piece\Piece.cs" />
     <Compile Include="Assets\Scripts\Grid\PieceMovementOptions.cs" />
     <Compile Include="Assets\Scripts\InputHandler\CellSelector.cs" />
