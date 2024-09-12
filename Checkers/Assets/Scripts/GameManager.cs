@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         playerInput = new PlayerInput(_inputReader);
-        _pieceManager.Initialize(_boardManager);
         turnHandler = new TurnHandler(PieceType.White, playerInput, pieceMovementOptions, _pieceManager, _boardManager);
         StartGameLoop();
     }

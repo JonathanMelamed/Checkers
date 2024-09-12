@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 93808946}
   m_Layer: 0
   m_Name: BlackPiece (5)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -259,7 +259,7 @@ GameObject:
   - component: {fileID: 123404123}
   m_Layer: 0
   m_Name: BlackPiece (2)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 219031558}
   m_Layer: 0
   m_Name: WhitePiece (6)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -501,7 +501,7 @@ GameObject:
   - component: {fileID: 283971264}
   m_Layer: 0
   m_Name: WhitePiece (8)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -622,7 +622,7 @@ GameObject:
   - component: {fileID: 309348901}
   m_Layer: 0
   m_Name: BlackPiece (11)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -743,7 +743,7 @@ GameObject:
   - component: {fileID: 358554738}
   m_Layer: 0
   m_Name: WhitePiece (3)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -878,7 +878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c39999e0182457699ab1af182d63503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputReader: {fileID: 11400000, guid: 9ef81985129dccb4ba6d1c974921d492, type: 2}
+  _inputReader: {fileID: 11400000, guid: 4613360e7defc48cb95ee39ddb7dbc60, type: 2}
   _boardManager: {fileID: 5900430379233435788}
   _pieceManager: {fileID: 749333226}
   pieceMovementOptions: {fileID: 1247494998}
@@ -1020,6 +1020,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4916c578d55c4747b759c76b76478a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _boardManager: {fileID: 5900430379233435788}
 --- !u!4 &749333227
 Transform:
   m_ObjectHideFlags: 0
@@ -1050,7 +1051,7 @@ GameObject:
   - component: {fileID: 768763969}
   m_Layer: 0
   m_Name: BlackPiece (1)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1171,7 +1172,7 @@ GameObject:
   - component: {fileID: 831591565}
   m_Layer: 0
   m_Name: WhitePiece (9)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1292,7 +1293,7 @@ GameObject:
   - component: {fileID: 880955492}
   m_Layer: 0
   m_Name: WhitePiece (5)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1413,7 +1414,7 @@ GameObject:
   - component: {fileID: 905984206}
   m_Layer: 0
   m_Name: BlackPiece (9)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1534,7 +1535,7 @@ GameObject:
   - component: {fileID: 942418193}
   m_Layer: 0
   m_Name: WhitePiece (7)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1797,6 +1798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1247494999}
   - component: {fileID: 1247494998}
+  - component: {fileID: 1247495000}
   m_Layer: 0
   m_Name: PieceMovment
   m_TagString: Untagged
@@ -1816,7 +1818,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3775ab64196d4d49a6856a31139f8ae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boardManager: {fileID: 0}
+  _moveValidator: {fileID: 1247495000}
+  _boardManager: {fileID: 5900430379233435788}
 --- !u!4 &1247494999
 Transform:
   m_ObjectHideFlags: 0
@@ -1832,6 +1835,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1247495000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247494997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4302c24ab57d4d6fb08e1ac568171653, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _boardManager: {fileID: 5900430379233435788}
 --- !u!1 &1255373771
 GameObject:
   m_ObjectHideFlags: 0
@@ -1847,7 +1863,7 @@ GameObject:
   - component: {fileID: 1255373773}
   m_Layer: 0
   m_Name: BlackPiece (4)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1968,7 +1984,7 @@ GameObject:
   - component: {fileID: 1289887924}
   m_Layer: 0
   m_Name: WhitePiece (4)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2089,7 +2105,7 @@ GameObject:
   - component: {fileID: 1338643674}
   m_Layer: 0
   m_Name: WhitePiece (1)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2210,7 +2226,7 @@ GameObject:
   - component: {fileID: 1668946913}
   m_Layer: 0
   m_Name: BlackPiece (10)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2331,7 +2347,7 @@ GameObject:
   - component: {fileID: 1768769753}
   m_Layer: 0
   m_Name: WhitePiece (2)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2452,7 +2468,7 @@ GameObject:
   - component: {fileID: 1784412561}
   m_Layer: 0
   m_Name: WhitePiece (10)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2693,7 +2709,7 @@ GameObject:
   - component: {fileID: 1942713539}
   m_Layer: 0
   m_Name: BlackPiece (6)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2814,7 +2830,7 @@ GameObject:
   - component: {fileID: 2047499378}
   m_Layer: 0
   m_Name: WhitePiece (11)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2935,7 +2951,7 @@ GameObject:
   - component: {fileID: 2081012820}
   m_Layer: 0
   m_Name: BlackPiece (3)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3056,7 +3072,7 @@ GameObject:
   - component: {fileID: 2107828973}
   m_Layer: 0
   m_Name: BlackPiece (8)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3177,7 +3193,7 @@ GameObject:
   - component: {fileID: 2141284483}
   m_Layer: 0
   m_Name: BlackPiece (7)
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6388,7 +6404,7 @@ GameObject:
   - component: {fileID: 6288253999182022184}
   m_Layer: 0
   m_Name: BlackPiece
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8933,7 +8949,7 @@ GameObject:
   - component: {fileID: 7698599358642281445}
   m_Layer: 0
   m_Name: WhitePiece
-  m_TagString: Untagged
+  m_TagString: Piece
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

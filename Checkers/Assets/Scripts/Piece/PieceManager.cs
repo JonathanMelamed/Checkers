@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PieceManager : MonoBehaviour
 {
-    private List<Piece> piecePositions = new List<Piece>();
-    private BoardManager _boardManager;
+    [SerializeField]private BoardManager _boardManager;
 
     public void Initialize(BoardManager boardManager)
     {
@@ -18,16 +17,34 @@ public class PieceManager : MonoBehaviour
     [CanBeNull]
     public Vector2Int? FindPiecePosition(Piece piece)
     {
+        float minDistance = Mathf.Infinity;
+        Vector2Int? closestCellPosition = null;
+
         for (int row = 0; row < _boardManager.boardSize; row++)
         {
             for (int col = 0; col < _boardManager.boardSize; col++)
             {
-                if (_boardManager.GetPieceTypeInCell(row, col) == piece.PieceType)
+                Cell cell = _boardManager.GetCell(row, col);
+                if (cell != null)
                 {
-                    return new Vector2Int(row, col);
+                    float distance = Vector3.Distance(piece.transform.position, cell.transform.position);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestCellPosition = new Vector2Int(row, col);
+                    }
                 }
             }
         }
-        return null;
+        return closestCellPosition;
+    }
+    
+    public void MovePiece(Piece piece,Vector2Int? piecePosition, Cell targetCell)
+    {
+            int fromRow = piecePosition.Value.x;
+            int fromCol = piecePosition.Value.y;
+            int toRow = targetCell.GetRow();
+            int toCol = targetCell.GetColumn();
+            piece.transform.position = targetCell.transform.position;
     }
 }

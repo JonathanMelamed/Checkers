@@ -3,19 +3,11 @@ using UnityEngine;
 
 public class PlayerInput
 {
-    private PieceSelector pieceSelector;
-    private CellSelector cellSelector;
-
+    public PieceSelector PieceSelector { get; private set; }
+    public CellSelector CellSelector { get; private set; }
     public PlayerInput(InputReader inputReader)
     {
-        pieceSelector = new PieceSelector(inputReader);
-        cellSelector = new CellSelector(inputReader);
-    }
-
-    public async Task<(Piece selectedPiece, Cell targetPosition)> GetPlayerMove(PieceType currentPlayerType)
-    {
-        var selectedPiece = await pieceSelector.SelectPiece(currentPlayerType);
-        var targetPosition = await cellSelector.SelectCell();
-        return (selectedPiece, targetPosition);
+        PieceSelector = new PieceSelector(inputReader);
+        CellSelector = new CellSelector(inputReader);
     }
 }

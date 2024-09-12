@@ -1,37 +1,37 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 public class PieceSelector
 {
     private Camera mainCamera;
     private InputReader inputReader;
+    private const string PieceTag = "Piece"; 
+    public event Action<Piece> OnPieceSelected;
 
     public PieceSelector(InputReader inputReader)
     {
         mainCamera = Camera.main;
         this.inputReader = inputReader;
-        inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
+
+        if (inputReader != null)
+        {
+            inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
+            inputReader.GameplayInput.Enable();
+        }
+        else
+        {
+            Debug.LogError("InputReader is not assigned.");
+        }
     }
 
-    public async Task<Piece> SelectPiece(PieceType currentPlayerType)
+    private void OnSelectPerformed(InputAction.CallbackContext context)
     {
-        Piece selectedPiece = null;
-
-        while (selectedPiece == null)
+        Piece piece = TryGetClickedPiece();
+        if (piece != null)
         {
-            if (inputReader.GameplayInput.GamePlay.Select.triggered)
-            {
-                var piece = TryGetClickedPiece();
-                if (IsValidPiece(piece, currentPlayerType))
-                {
-                    selectedPiece = piece;
-                }
-            }
-            await Task.Yield();
+            OnPieceSelected?.Invoke(piece); // Trigger the event when a piece is selected
         }
-
-        return selectedPiece;
     }
 
     private Piece TryGetClickedPiece()
@@ -39,19 +39,20 @@ public class PieceSelector
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Piece piece = hit.collider.GetComponent<Piece>();
-            return piece;
+            if (hit.collider.CompareTag(PieceTag))
+            {
+                return hit.collider.GetComponent<Piece>();
+            }
         }
         return null;
     }
 
-    private bool IsValidPiece(Piece piece, PieceType currentPlayerType)
+    public void Cleanup()
     {
-        return piece != null && piece.PieceType == currentPlayerType;
-    }
-
-    private void OnSelectPerformed(InputAction.CallbackContext context)
-    {
-        // Handle the select performed event
+        if (inputReader != null)
+        {
+            inputReader.GameplayInput.GamePlay.Select.performed -= OnSelectPerformed;
+            inputReader.GameplayInput.Disable();
+        }
     }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tile
   - Cell
+  - Piece
   layers:
   - Default
   - TransparentFX

@@ -29,7 +29,7 @@ public partial class @GameplayInput: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Select"",
-                    ""type"": ""Value"",
+                    ""type"": ""Button"",
                     ""id"": ""73554dcb-955c-4923-b66f-a48ba850320f"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",

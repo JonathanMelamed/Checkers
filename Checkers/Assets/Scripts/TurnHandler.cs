@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
+
 public class TurnHandler
 {
     private PieceType _currentColor;
@@ -9,7 +10,9 @@ public class TurnHandler
     private PieceMovementOptions _pieceMovementOptions;
     private PieceManager _pieceManager;
     private BoardManager _boardManager;
-
+    private Piece _selectedPiece;
+    private List<Cell> _validMoves;
+    private List<Piece> _canSelectPieces;
     public event Action<PieceType> OnTurnCompleted;
 
     public TurnHandler(PieceType startingColor, PlayerInput playerInput, PieceMovementOptions pieceMovementOptions, PieceManager pieceManager, BoardManager boardManager)
@@ -19,23 +22,47 @@ public class TurnHandler
         _pieceMovementOptions = pieceMovementOptions;
         _pieceManager = pieceManager;
         _boardManager = boardManager;
+
+        _playerInput.PieceSelector.OnPieceSelected += HandlePieceSelected;
+        _playerInput.CellSelector.OnCellSelected += HandleCellSelected; 
     }
 
     public async Task DoTurn()
     {
-        var (selectedPiece, targetPosition) = await _playerInput.GetPlayerMove(_currentColor);
+        _canSelectPieces = GetCanSelectPieces();
+        await Task.Yield();
+    }
 
-        Vector2Int? piecePosition = _pieceManager.FindPiecePosition(selectedPiece);
-        if (piecePosition.HasValue)
+    private List<Piece> GetCanSelectPieces()
+    {
+        //empty for now
+        return null;
+    }
+
+    private void HandlePieceSelected(Piece piece)
+    {
+        if (piece.PieceType == _currentColor)
         {
-            Cell currentCell = _boardManager.GetCell(piecePosition.Value.x, piecePosition.Value.y);
-
-            List<Cell> validMoves = _pieceMovementOptions.GetValidMoves(currentCell, selectedPiece);
-            _pieceMovementOptions.HighlightValidMoves(validMoves, Color.green);
-
-            if (validMoves.Contains(targetPosition))
+            _selectedPiece = piece;
+            Vector2Int? piecePosition = _pieceManager.FindPiecePosition(_selectedPiece);
+            if (piecePosition.HasValue)
             {
-                _boardManager.MovePiece(selectedPiece, targetPosition);
+                Cell currentCell = _boardManager.GetCell(piecePosition.Value.x, piecePosition.Value.y);
+                _validMoves = _pieceMovementOptions.GetValidMoves(currentCell, _selectedPiece.PieceType);
+            }
+        }
+    }
+
+    private void HandleCellSelected(Cell selectedCell)
+    {
+        if (_validMoves != null && _validMoves.Contains(selectedCell))
+        {
+            Vector2Int? piecePosition = _pieceManager.FindPiecePosition(_selectedPiece);
+            if (piecePosition.HasValue)
+            {
+                
+                _boardManager.MovePiece(piecePosition.Value.x, piecePosition.Value.y,selectedCell.GetRow(),selectedCell.GetColumn());
+                _pieceManager.MovePiece(_selectedPiece, piecePosition, selectedCell);
                 OnTurnCompleted?.Invoke(_currentColor);
                 SwitchTurn();
             }
@@ -44,8 +71,6 @@ public class TurnHandler
 
     private void SwitchTurn()
     {
-        _currentColor = _currentColor == PieceType.Black
-            ? PieceType.White
-            : PieceType.Black;
+        _currentColor = _currentColor == PieceType.Black ? PieceType.White : PieceType.Black;
     }
 }

@@ -1,19 +1,21 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[CreateAssetMenu]
-public class InputReader : ScriptableObject
+[CreateAssetMenu(fileName = "InputReader", menuName = "Input/InputReader")]
+public class InputReader : ScriptableObject, GameplayInput.IGamePlayActions
 {
-    [SerializeField] private GameplayInput gameplayInput;
+    private GameplayInput gameplayInput;
 
     public GameplayInput GameplayInput => gameplayInput;
 
     private void OnEnable()
     {
-        if (gameplayInput != null)
+        if (gameplayInput == null)
         {
-            gameplayInput.Enable();
+            gameplayInput = new GameplayInput();  // Initialize the input actions
+            gameplayInput.GamePlay.SetCallbacks(this); // Set callbacks to listen for actions
         }
+        gameplayInput.Enable();
     }
 
     private void OnDisable()
@@ -21,6 +23,16 @@ public class InputReader : ScriptableObject
         if (gameplayInput != null)
         {
             gameplayInput.Disable();
+        }
+    }
+
+    // Implement the interface method to handle the "Select" action
+    public void OnSelect(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Debug.Log("Select action performed");
+            // Place logic here for when the "Select" action is triggered
         }
     }
 }

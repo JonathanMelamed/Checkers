@@ -3,7 +3,6 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     public int boardSize = 8;
-    [SerializeField] private PieceManager _pieceManager;
     private (Cell cell, PieceType pieceType)[,] _board;
 
     void Start()
@@ -37,11 +36,11 @@ public class BoardManager : MonoBehaviour
                 {
                     if (row < 3) 
                     {
-                        _board[row, col] = (_board[row, col].cell, PieceType.White);
+                        _board[row, col] = (_board[row, col].cell, PieceType.Black);
                     }
                     else if (row >= boardSize - 3)
                     {
-                        _board[row, col] = (_board[row, col].cell, PieceType.Black);
+                        _board[row, col] = (_board[row, col].cell, PieceType.White);
                     }
                 }
             }
@@ -58,19 +57,20 @@ public class BoardManager : MonoBehaviour
         return PieceType.Null;
     }
 
-    public void MovePiece(Piece pieceToMove, Cell targetCell)
+    public bool IsQueen(PieceType pieceType)
     {
-        Vector2Int? currentPosition = _pieceManager.FindPiecePosition(pieceToMove);
-        int fromRow = currentPosition.Value.x;
-        int fromColumn = currentPosition.Value.y;
-        int toRow = targetCell.GetRow();
-        int toColumn = targetCell.GetColumn();
+        // Return whether the pieceType is a queen (can move in all directions).
+        // You can add a specific logic to mark pieces as queens.
+        return false;
+    }
 
-        if (IsWithinBounds(fromRow, fromColumn) && IsWithinBounds(toRow, toColumn))
+    public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
+    {
+        if (IsWithinBounds(fromRow, fromCol) && IsWithinBounds(toRow, toCol))
         {
-            PieceType pieceType = _board[fromRow, fromColumn].pieceType;
-            _board[toRow, toColumn] = (_board[toRow, toColumn].cell, pieceType);
-            _board[fromRow, fromColumn] = (_board[fromRow, fromColumn].cell, PieceType.Null);
+            PieceType pieceType = _board[fromRow, fromCol].pieceType;
+            _board[toRow, toCol] = (_board[toRow, toCol].cell, pieceType);
+            _board[fromRow, fromCol] = (_board[fromRow, fromCol].cell, PieceType.Null);
         }
     }
 
@@ -82,6 +82,7 @@ public class BoardManager : MonoBehaviour
         }
         return null;
     }
+
     public bool IsWithinBounds(int row, int column)
     {
         return row >= 0 && column >= 0 && row < boardSize && column < boardSize;

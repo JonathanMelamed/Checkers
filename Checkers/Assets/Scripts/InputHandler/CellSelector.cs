@@ -1,21 +1,24 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CellSelector
 {
     private Camera mainCamera;
-    private InputReader _inputReader;
+    private InputReader inputReader;
+    private const string CellTag = "Cell"; // Define the tag for cells
+
+    public event Action<Cell> OnCellSelected; // Event triggered when a valid cell is selected
 
     public CellSelector(InputReader inputReader)
     {
         mainCamera = Camera.main;
-        _inputReader = inputReader;
+        this.inputReader = inputReader;
 
-        if (_inputReader != null)
+        if (inputReader != null)
         {
-            _inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
-            _inputReader.GameplayInput.Enable(); // Ensure the input actions are enabled
+            inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
+            inputReader.GameplayInput.Enable(); 
         }
         else
         {
@@ -23,20 +26,13 @@ public class CellSelector
         }
     }
 
-    public async Task<Cell> SelectCell()
+    private void OnSelectPerformed(InputAction.CallbackContext context)
     {
-        Cell selectedCell = null;
-
-        while (selectedCell == null)
+        Cell selectedCell = TryGetClickedCell();
+        if (selectedCell != null)
         {
-            if (_inputReader.GameplayInput.GamePlay.Select.triggered)
-            {
-                selectedCell = TryGetClickedCell();
-            }
-            await Task.Yield();
+            OnCellSelected?.Invoke(selectedCell);
         }
-
-        return selectedCell;
     }
 
     private Cell TryGetClickedCell()
@@ -44,22 +40,11 @@ public class CellSelector
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Cell cell = hit.collider.GetComponent<Cell>();
-            return cell;
+            if (hit.collider.CompareTag(CellTag)) 
+            {
+                return hit.collider.GetComponent<Cell>();
+            }
         }
         return null;
-    }
-
-    private void OnSelectPerformed(InputAction.CallbackContext context)
-    {
-    }
-
-    public void Cleanup()
-    {
-        if (_inputReader != null)
-        {
-            _inputReader.GameplayInput.GamePlay.Select.performed -= OnSelectPerformed;
-            _inputReader.GameplayInput.Disable();
-        }
     }
 }
