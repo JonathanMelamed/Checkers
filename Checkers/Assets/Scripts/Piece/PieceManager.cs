@@ -1,19 +1,66 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
 public class PieceManager : MonoBehaviour
 {
-    [SerializeField]private BoardManager _boardManager;
+    [SerializeField] private BoardManager _boardManager;
 
-    public void Initialize(BoardManager boardManager)
+    private void Start()
     {
-        _boardManager = boardManager;
+        Initialize();
     }
+
+    public void Initialize()
+    {
+        _boardManager.PieceCaptured += OnPieceCaptured;
+        _boardManager.PieceMoved += OnPieceMoved;
+    }
+
+    private void OnPieceCaptured(Cell capturedCell)
+    {
+        RemovePiece(capturedCell);
+    }
+    private void OnPieceMoved(Cell fromCell,Cell toCell)
+    {
+        Piece piece = FindPieceInCell(fromCell);
+
+        if (piece != null)
+        {
+            Vector2Int? piecePosition = FindPiecePosition(piece);
+            if (piecePosition.HasValue)
+            {
+                MovePiece(piece, piecePosition.Value, toCell);
+            }
+        }
+    }
+
     public void RemovePiece(Cell cell)
     {
+        Piece piece = FindPieceInCell(cell);
+        if (piece != null)
+        {
+            Destroy(piece.gameObject);
+        }
     }
-    
+
+    private Piece FindPieceInCell(Cell cell)
+    {
+        Vector2Int cellPosition = new Vector2Int(cell.GetRow(), cell.GetColumn());
+
+        foreach (Piece piece in FindObjectsOfType<Piece>())
+        {
+            Vector2Int? piecePosition = FindPiecePosition(piece);
+            if (piecePosition.HasValue && piecePosition.Value == cellPosition)
+            {
+                return piece;
+            }
+        }
+
+        return null;
+    }
+
     [CanBeNull]
     public Vector2Int? FindPiecePosition(Piece piece)
     {
@@ -36,15 +83,16 @@ public class PieceManager : MonoBehaviour
                 }
             }
         }
+
         return closestCellPosition;
     }
-    
-    public void MovePiece(Piece piece,Vector2Int? piecePosition, Cell targetCell)
+
+    public void MovePiece(Piece piece, Vector2Int? piecePosition, Cell targetCell)
     {
-            int fromRow = piecePosition.Value.x;
-            int fromCol = piecePosition.Value.y;
-            int toRow = targetCell.GetRow();
-            int toCol = targetCell.GetColumn();
-            piece.transform.position = targetCell.transform.position;
+        int fromRow = piecePosition.Value.x;
+        int fromCol = piecePosition.Value.y;
+        int toRow = targetCell.GetRow();
+        int toCol = targetCell.GetColumn();
+        piece.transform.position = targetCell.transform.position;
     }
 }

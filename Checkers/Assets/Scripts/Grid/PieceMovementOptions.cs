@@ -11,35 +11,36 @@ public class PieceMovementOptions : MonoBehaviour
 
     public List<Cell> GetValidMoves(Cell sourceCell, PieceType pieceType)
     {
-        HighlightValidMoves();  // For toggling previous highlights
+        HighlightValidMoves();
         validMoves.Clear();
         captureMoves.Clear();
         int currentRow = sourceCell.GetRow();
         int currentCol = sourceCell.GetColumn();
-
         foreach (var direction in _moveValidator.GetMovementDirections(pieceType))
         {
-            int targetRow = currentRow + direction.rowOffset;
-            int targetCol = currentCol + direction.colOffset;
-            Cell targetCell = _boardManager.GetCell(targetRow, targetCol);
-
-            if (targetCell != null && _moveValidator.IsMoveValid(sourceCell, targetCell, pieceType))
+            Cell captureCell = _moveValidator.CanCapture(sourceCell, pieceType, direction);
+            if (captureCell != null)
             {
-                validMoves.Add(targetCell);
-            }
-            else
-            {
-                targetCell = _moveValidator.CanCapture(sourceCell, pieceType);
-                if (targetCell != null)
-                {
-                    captureMoves.Add(targetCell);
-                }
+                captureMoves.Add(captureCell);
             }
         }
-
         if (captureMoves.Count > 0)
         {
             validMoves = captureMoves;
+        }
+        else
+        {
+            foreach (var direction in _moveValidator.GetMovementDirections(pieceType))
+            {
+                int targetRow = currentRow + direction.rowOffset;
+                int targetCol = currentCol + direction.colOffset;
+                Cell targetCell = _boardManager.GetCell(targetRow, targetCol);
+
+                if (targetCell != null && _moveValidator.IsMoveValid(sourceCell, targetCell, pieceType))
+                {
+                    validMoves.Add(targetCell);
+                }
+            }
         }
 
         HighlightValidMoves();
@@ -51,7 +52,7 @@ public class PieceMovementOptions : MonoBehaviour
         foreach (Cell cell in validMoves)
         {
             Renderer cellRenderer = cell.GetComponent<Renderer>();
-            cellRenderer.enabled = !cellRenderer.enabled; 
+            cellRenderer.enabled = !cellRenderer.enabled;
         }
     }
 }

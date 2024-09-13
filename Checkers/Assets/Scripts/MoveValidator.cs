@@ -13,18 +13,17 @@ public class MoveValidator : MonoBehaviour
                IsCellEmpty(targetCell);
     }
 
-    public Cell CanCapture(Cell sourceCell, PieceType pieceType)
+    public Cell CanCapture(Cell sourceCell, PieceType pieceType, (int rowOffset, int colOffset) direction)
     {
-        foreach (var direction in GetMovementDirections(pieceType))
+        int fromRow = sourceCell.GetRow();
+        int fromCol = sourceCell.GetColumn();
+        Cell opponentCell = _boardManager.GetCell(fromRow + direction.rowOffset, fromCol + direction.colOffset);
+        if (opponentCell != null && IsOpponentPiece(opponentCell, pieceType))
         {
-            Cell opponentCell = _boardManager.GetCell(sourceCell.GetRow() + direction.rowOffset, sourceCell.GetColumn() + direction.colOffset);
-            if (opponentCell != null && IsOpponentPiece(opponentCell, pieceType))
+            Cell captureCell = _boardManager.GetCell(fromRow + 2 * direction.rowOffset, fromCol + 2 * direction.colOffset);
+            if (captureCell != null && IsCellEmpty(captureCell))
             {
-                Cell captureCell = _boardManager.GetCell(sourceCell.GetRow() + 2 * direction.rowOffset, sourceCell.GetColumn() + 2 * direction.colOffset);
-                if (captureCell != null && IsCellEmpty(captureCell))
-                {
-                    return captureCell;
-                }
+                return captureCell;
             }
         }
 

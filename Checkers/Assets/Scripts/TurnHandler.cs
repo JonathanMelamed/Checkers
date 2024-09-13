@@ -60,9 +60,8 @@ public class TurnHandler
             Vector2Int? piecePosition = _pieceManager.FindPiecePosition(_selectedPiece);
             if (piecePosition.HasValue)
             {
-                
                 _boardManager.MovePiece(piecePosition.Value.x, piecePosition.Value.y,selectedCell.GetRow(),selectedCell.GetColumn());
-                _pieceManager.MovePiece(_selectedPiece, piecePosition, selectedCell);
+                // _pieceManager.MovePiece(_selectedPiece, piecePosition, selectedCell);
                 OnTurnCompleted?.Invoke(_currentColor);
                 SwitchTurn();
             }
