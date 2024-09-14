@@ -9,7 +9,7 @@ public class BoardManager : MonoBehaviour
     public event Action<Cell> PieceCaptured;
     public event Action<Cell,Cell> PieceMoved;
 
-    void Start()
+    void Awake()
     {
         _board = new (Cell, PieceType)[boardSize, boardSize];
         InitializeBoard();

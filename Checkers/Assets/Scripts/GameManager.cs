@@ -1,28 +1,47 @@
-﻿using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private BoardManager _boardManager;
     [SerializeField] private PieceManager _pieceManager;
-    [SerializeField] private PieceMovementOptions pieceMovementOptions;
+    [SerializeField] private PieceMovementOptions _pieceMovementOptions;
 
-    private PlayerInput playerInput;
-    private TurnHandler turnHandler;
+    private PlayerInput _playerInput;
+    private TurnHandler _turnHandler;
 
     private void Start()
     {
-        playerInput = new PlayerInput(_inputReader);
-        turnHandler = new TurnHandler(PieceType.White, playerInput, pieceMovementOptions, _pieceManager, _boardManager);
-        StartGameLoop();
+        InitializeGame();
+        _turnHandler.StartTurn();
     }
 
-    private async void StartGameLoop()
+    private void InitializeGame()
     {
-        while (true)
-        {
-            await turnHandler.DoTurn();
-        }
+        InitializePlayerInput();
+        InitializeTurnHandler();
+        SubscribeToEvents();
+    }
+
+    private void InitializePlayerInput()
+    {
+        _playerInput = new PlayerInput(_inputReader);
+    }
+
+    private void InitializeTurnHandler()
+    {
+        _turnHandler = new TurnHandler(PieceType.White, _playerInput, _pieceMovementOptions, _pieceManager,
+            _boardManager);
+        _pieceManager.SubscribeToTurnHandler(_turnHandler);
+    }
+
+    private void SubscribeToEvents()
+    {
+        _turnHandler.OnTurnCompleted += HandleTurnCompleted;
+    }
+
+    private void HandleTurnCompleted(PieceType completedColor)
+    {
+        _turnHandler.StartTurn();
     }
 }

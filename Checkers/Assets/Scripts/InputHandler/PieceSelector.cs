@@ -1,42 +1,40 @@
 ﻿using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PieceSelector
 {
-    private Camera mainCamera;
-    private InputReader inputReader;
-    private const string PieceTag = "Piece"; 
+    private Camera _mainCamera;
+    private InputReader _inputReader;
+    private const string PieceTag = "Piece";
+
     public event Action<Piece> OnPieceSelected;
 
     public PieceSelector(InputReader inputReader)
     {
-        mainCamera = Camera.main;
-        this.inputReader = inputReader;
+        _mainCamera = Camera.main;
+        _inputReader = inputReader;
+        SubscribeToInputEvents();
+    }
 
-        if (inputReader != null)
-        {
-            inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
-            inputReader.GameplayInput.Enable();
-        }
-        else
-        {
-            Debug.LogError("InputReader is not assigned.");
-        }
+    private void SubscribeToInputEvents()
+    {
+        _inputReader.GameplayInput.GamePlay.Select.performed += OnSelectPerformed;
+        _inputReader.GameplayInput.Enable();
     }
 
     private void OnSelectPerformed(InputAction.CallbackContext context)
     {
-        Piece piece = TryGetClickedPiece();
-        if (piece != null)
+        Piece selectedPiece = GetClickedPiece();
+        if (selectedPiece != null)
         {
-            OnPieceSelected?.Invoke(piece); // Trigger the event when a piece is selected
+            OnPieceSelected?.Invoke(selectedPiece);
         }
     }
 
-    private Piece TryGetClickedPiece()
+    private Piece GetClickedPiece()
     {
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = _mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             if (hit.collider.CompareTag(PieceTag))
@@ -44,15 +42,7 @@ public class PieceSelector
                 return hit.collider.GetComponent<Piece>();
             }
         }
-        return null;
-    }
 
-    public void Cleanup()
-    {
-        if (inputReader != null)
-        {
-            inputReader.GameplayInput.GamePlay.Select.performed -= OnSelectPerformed;
-            inputReader.GameplayInput.Disable();
-        }
+        return null;
     }
 }

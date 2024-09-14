@@ -6,10 +6,17 @@ using UnityEngine;
 public class PieceManager : MonoBehaviour
 {
     [SerializeField] private BoardManager _boardManager;
-
     private void Start()
     {
         Initialize();
+    }
+    public void SubscribeToTurnHandler(TurnHandler turnHandler)
+    {
+        turnHandler.OnInvalidPieceSelected += HandleInvalidPieceSelected;
+    }
+    private async void HandleInvalidPieceSelected(Piece piece)
+    {
+        await PieceShaker.ShakePieceAsync(piece);
     }
 
     public void Initialize()
@@ -17,6 +24,19 @@ public class PieceManager : MonoBehaviour
         _boardManager.PieceCaptured += OnPieceCaptured;
         _boardManager.PieceMoved += OnPieceMoved;
     }
+    public List<Piece> GetPiecesByType(PieceType pieceType)
+    {
+        List<Piece> piecesOfType = new List<Piece>();
+        foreach (Piece piece in FindObjectsOfType<Piece>())
+        {
+            if (piece.PieceType == pieceType)
+            {
+                piecesOfType.Add(piece);
+            }
+        }
+        return piecesOfType;
+    }
+    
 
     private void OnPieceCaptured(Cell capturedCell)
     {
