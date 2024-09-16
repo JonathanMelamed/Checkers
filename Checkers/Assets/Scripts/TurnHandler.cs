@@ -1,103 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
-
+using Zenject;
 public class TurnHandler
 {
     private PieceType _currentColor;
-    private PlayerInput _playerInput;
-    private PieceMovementOptions _pieceMovementOptions;
-    private PieceManager _pieceManager;
-    private BoardManager _boardManager;
+    private readonly InputHandler _inputHandler;
+    private readonly MoveManager _moveManager;
+    private readonly PieceManager _pieceManager;
     private Piece _selectedPiece;
-    private List<Cell> _validMoves;
-    private List<Piece> _canSelectPieces;
-    public event Action<PieceType> OnTurnCompleted; 
+    private bool _inputLocked;
+
+    public PieceType CurrentColor => _currentColor;
+    public event Action OnTurnCompleted;
     public event Action<Piece> OnInvalidPieceSelected;
-    public TurnHandler(PieceType startingColor, PlayerInput playerInput, PieceMovementOptions pieceMovementOptions,
-        PieceManager pieceManager, BoardManager boardManager)
+
+    public List<Piece> CanSelectPieces { get; private set; }
+    [Inject]
+    public TurnHandler(PieceType startingColor, PlayerInput playerInput, BoardManager boardManager,
+        MoveManager moveManager, PieceManager pieceManager)
     {
         _currentColor = startingColor;
-        _playerInput = playerInput;
-        _pieceMovementOptions = pieceMovementOptions;
+        _inputHandler = new InputHandler(this, playerInput);
+        _moveManager = moveManager;
         _pieceManager = pieceManager;
-        _boardManager = boardManager;
-
-        _playerInput.PieceSelector.OnPieceSelected += HandlePieceSelected;
-        _playerInput.CellSelector.OnCellSelected += HandleCellSelected;
+        _pieceManager.PieceMoveDone += HandleTurnCompleted;
+    }
+    public void StartTurn()
+    {
+        _inputLocked = true;
+        CanSelectPieces = _moveManager.GetSelectablePieces(_currentColor);
+        Debug.Log("Selectable pieces: " + CanSelectPieces.Count);
+        _inputLocked = false;
     }
 
-    public async Task StartTurn()
+    public void HandlePieceSelected(Piece piece)
     {
-        _canSelectPieces = await GetCanSelectPiecesAsync();
-        Debug.Log("Selectable pieces: " + _canSelectPieces.Count);
-    }
-
-    private async Task<List<Piece>> GetCanSelectPiecesAsync()
-    {
-        var capturablePieces = new List<Piece>();
-        var allPieces = _pieceManager.GetPiecesByType(_currentColor);
-
-        foreach (var piece in allPieces)
+        if (_inputLocked)
         {
-            Vector2Int? piecePosition = _pieceManager.FindPiecePosition(piece);
-            if (piecePosition.HasValue)
-            {
-                Cell currentCell = _boardManager.GetCell(piecePosition.Value.x, piecePosition.Value.y);
-                if (_pieceMovementOptions.HasCaptureMoves(currentCell, _currentColor))
-                {
-                    capturablePieces.Add(piece);
-                }
-            }
-
-            await Task.Yield(); 
+            Debug.LogWarning("Input is locked, please wait for the turn to start.");
+            return;
         }
 
-        if (capturablePieces.Count > 0)
+        _selectedPiece = piece;
+        if (CanSelectPieces.Contains(piece))
         {
-            return capturablePieces;
-        }
-        return allPieces;
-    }
-
-    private void HandlePieceSelected(Piece piece)
-    {
-        if (_canSelectPieces.Contains(piece))
-        {
-            _selectedPiece = piece;
-            Vector2Int? piecePosition = _pieceManager.FindPiecePosition(_selectedPiece);
-            if (piecePosition.HasValue)
-            {
-                Cell currentCell = _boardManager.GetCell(piecePosition.Value.x, piecePosition.Value.y);
-                _validMoves = _pieceMovementOptions.GetValidMoves(currentCell, _selectedPiece.PieceType);
-                _pieceMovementOptions.HighlightValidMoves();
-            }
+            _moveManager.HandlePieceSelected(piece, _currentColor);
         }
         else
         {
-            OnInvalidPieceSelected?.Invoke(piece);
+            _moveManager.ClearValidMoves();
+            RaiseInvalidPieceSelected(piece);
         }
     }
 
-    private void HandleCellSelected(Cell selectedCell)
+    public void HandleCellSelected(Cell selectedCell)
     {
-        if (_validMoves != null && _validMoves.Contains(selectedCell))
+        if (_inputLocked)
         {
-            Vector2Int? piecePosition = _pieceManager.FindPiecePosition(_selectedPiece);
-            if (piecePosition.HasValue)
-            {
-                _boardManager.MovePiece(piecePosition.Value.x, piecePosition.Value.y, selectedCell.GetRow(),
-                    selectedCell.GetColumn());
-                _pieceMovementOptions.HighlightValidMoves();
-                SwitchTurn();
-                OnTurnCompleted?.Invoke(_currentColor);
-            }
+            Debug.LogWarning("Input is locked, please wait for the turn to start.");
+            return;
+        }
+
+        if (_selectedPiece != null)
+        {
+            _moveManager.HandleCellSelected(selectedCell, _selectedPiece);
         }
     }
 
-    private void SwitchTurn()
+    public void SwitchTurn()
     {
         _currentColor = _currentColor == PieceType.Black ? PieceType.White : PieceType.Black;
+    }
+
+    private void RaiseInvalidPieceSelected(Piece piece)
+    {
+        OnInvalidPieceSelected?.Invoke(piece);
+    }
+
+    private void HandleTurnCompleted()
+    {
+        SwitchTurn();
+        OnTurnCompleted.Invoke();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 public class CellSelector
 {
@@ -10,10 +11,11 @@ public class CellSelector
 
     public event Action<Cell> OnCellSelected; // Event triggered when a valid cell is selected
 
-    public CellSelector(InputReader inputReader)
+    [Inject]
+    public CellSelector(InputReader inputReader, Camera mainCamera)
     {
-        _mainCamera = Camera.main;
         _inputReader = inputReader;
+        _mainCamera = mainCamera;
         SubscribeToInputEvents();
     }
 

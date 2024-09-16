@@ -12,8 +12,8 @@ public class InputReader : ScriptableObject, GameplayInput.IGamePlayActions
     {
         if (gameplayInput == null)
         {
-            gameplayInput = new GameplayInput();  // Initialize the input actions
-            gameplayInput.GamePlay.SetCallbacks(this); // Set callbacks to listen for actions
+            gameplayInput = new GameplayInput();
+            gameplayInput.GamePlay.SetCallbacks(this); 
         }
         gameplayInput.Enable();
     }
@@ -26,13 +26,11 @@ public class InputReader : ScriptableObject, GameplayInput.IGamePlayActions
         }
     }
 
-    // Implement the interface method to handle the "Select" action
     public void OnSelect(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             Debug.Log("Select action performed");
-            // Place logic here for when the "Select" action is triggered
         }
     }
 }

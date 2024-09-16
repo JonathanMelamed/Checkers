@@ -1,118 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using UnityEngine;
+using Zenject;
 
-public class PieceManager : MonoBehaviour
+public class PieceManager : MonoBehaviour, IPieceManager
 {
-    [SerializeField] private BoardManager _boardManager;
-    private void Start()
+    [Inject] private BoardManager _boardManager;
+    [Inject] public PieceFinder PieceFinder;
+    [Inject] private PieceMover _pieceMover;
+
+    public event Action PieceMoveDone;
+
+    private void OnEnable()
     {
-        Initialize();
+        if (_boardManager == null)
+        {
+            Debug.LogError("BoardManager is null in PieceManager!");
+        }
+        else
+        {
+            _boardManager.PieceCaptured += RemovePiece;
+            _boardManager.PieceMoved += MovePiece;
+        }
     }
+
+    private void OnDisable()
+    {
+        _boardManager.PieceCaptured -= RemovePiece;
+        _boardManager.PieceMoved -= MovePiece;
+    }
+
     public void SubscribeToTurnHandler(TurnHandler turnHandler)
     {
         turnHandler.OnInvalidPieceSelected += HandleInvalidPieceSelected;
     }
+
     private async void HandleInvalidPieceSelected(Piece piece)
     {
-        await PieceShaker.ShakePieceAsync(piece);
+        await PieceAnimator.ShakePieceAsync(piece);
     }
 
-    public void Initialize()
-    {
-        _boardManager.PieceCaptured += OnPieceCaptured;
-        _boardManager.PieceMoved += OnPieceMoved;
-    }
     public List<Piece> GetPiecesByType(PieceType pieceType)
     {
-        List<Piece> piecesOfType = new List<Piece>();
-        foreach (Piece piece in FindObjectsOfType<Piece>())
-        {
-            if (piece.PieceType == pieceType)
-            {
-                piecesOfType.Add(piece);
-            }
-        }
-        return piecesOfType;
-    }
-    
-
-    private void OnPieceCaptured(Cell capturedCell)
-    {
-        RemovePiece(capturedCell);
-    }
-    private void OnPieceMoved(Cell fromCell,Cell toCell)
-    {
-        Piece piece = FindPieceInCell(fromCell);
-
-        if (piece != null)
-        {
-            Vector2Int? piecePosition = FindPiecePosition(piece);
-            if (piecePosition.HasValue)
-            {
-                MovePiece(piece, piecePosition.Value, toCell);
-            }
-        }
+        return PieceFinder.GetPiecesByType(pieceType);
     }
 
     public void RemovePiece(Cell cell)
     {
-        Piece piece = FindPieceInCell(cell);
+        Piece piece = PieceFinder.FindPieceInCell(cell);
         if (piece != null)
         {
             Destroy(piece.gameObject);
         }
     }
 
-    private Piece FindPieceInCell(Cell cell)
+    public void MovePiece(Cell fromCell, Cell toCell)
     {
-        Vector2Int cellPosition = new Vector2Int(cell.GetRow(), cell.GetColumn());
+        Piece piece = PieceFinder.FindPieceInCell(fromCell);
 
-        foreach (Piece piece in FindObjectsOfType<Piece>())
+        if (piece != null)
         {
-            Vector2Int? piecePosition = FindPiecePosition(piece);
-            if (piecePosition.HasValue && piecePosition.Value == cellPosition)
+            Vector2Int? piecePosition = PieceFinder.FindPiecePosition(piece);
+            if (piecePosition.HasValue)
             {
-                return piece;
+                _pieceMover.MovePiece(piece, piecePosition, toCell);
             }
         }
 
-        return null;
-    }
-
-    [CanBeNull]
-    public Vector2Int? FindPiecePosition(Piece piece)
-    {
-        float minDistance = Mathf.Infinity;
-        Vector2Int? closestCellPosition = null;
-
-        for (int row = 0; row < _boardManager.boardSize; row++)
-        {
-            for (int col = 0; col < _boardManager.boardSize; col++)
-            {
-                Cell cell = _boardManager.GetCell(row, col);
-                if (cell != null)
-                {
-                    float distance = Vector3.Distance(piece.transform.position, cell.transform.position);
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        closestCellPosition = new Vector2Int(row, col);
-                    }
-                }
-            }
-        }
-
-        return closestCellPosition;
-    }
-
-    public void MovePiece(Piece piece, Vector2Int? piecePosition, Cell targetCell)
-    {
-        int fromRow = piecePosition.Value.x;
-        int fromCol = piecePosition.Value.y;
-        int toRow = targetCell.GetRow();
-        int toCol = targetCell.GetColumn();
-        piece.transform.position = targetCell.transform.position;
+        PieceMoveDone?.Invoke();
     }
 }

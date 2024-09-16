@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 public class PieceSelector
 {
@@ -10,9 +11,10 @@ public class PieceSelector
 
     public event Action<Piece> OnPieceSelected;
 
-    public PieceSelector(InputReader inputReader)
+    [Inject]
+    public PieceSelector(InputReader inputReader, Camera mainCamera)
     {
-        _mainCamera = Camera.main;
+        _mainCamera = mainCamera;
         _inputReader = inputReader;
         SubscribeToInputEvents();
     }
